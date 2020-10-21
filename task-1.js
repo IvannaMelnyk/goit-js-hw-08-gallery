@@ -44,10 +44,10 @@ function openModal(event) {
     return;
   }
   refs.modal.classList.add('is-open');
-  window.addEventListener('keydown', onEscBtnClick);
 
-  window.addEventListener('keydown', onArrowRightButtonClick);
-  window.addEventListener('keydown', onArrowLeftButtonClick);
+  window.addEventListener('keydown', onEscBtnClick);
+  window.addEventListener('keydown', onArrowButtonClick);
+
   refs.bigImg.src = event.target.dataset.source;
   refs.bigImg.alt = event.target.alt;
 }
@@ -55,8 +55,8 @@ function openModal(event) {
 function OnCloseModalBtnClick() {
 
   refs.modal.classList.remove('is-open');
-  window.removeEventListener('keydown', onArrowLeftButtonClick);
-  window.removeEventListener('keydown', onArrowRightButtonClick);
+
+  window.removeEventListener('keydown', onArrowButtonClick);
   window.addEventListener('keydown', onEscBtnClick);
 
   refs.bigImg.src = '';
@@ -69,10 +69,9 @@ function onEscBtnClick(event) {
   if (isEscBtn) {
     console.log('Закрыть модалку');
     refs.modal.classList.remove('is-open');
-    window.addEventListener('keydown', onEscBtnClick);
 
-    window.removeEventListener('keydown', onArrowLeftButtonClick);
-    window.removeEventListener('keydown', onArrowRightButtonClick);
+    window.addEventListener('keydown', onEscBtnClick);
+    window.removeEventListener('keydown', onArrowButtonClick);
     window.removeEventListener('keydown', onEscBtnClick);
 
     refs.bigImg.src = '';
@@ -81,8 +80,8 @@ function onEscBtnClick(event) {
 }
 function onBackdropClick() {
   refs.modal.classList.remove('is-open');
-  window.removeEventListener('keydown', onArrowLeftButtonClick);
-  window.removeEventListener('keydown', onArrowRightButtonClick);
+
+  window.removeEventListener('keydown', onArrowButtonClick);
   window.addEventListener('keydown', onEscBtnClick);
 
   refs.bigImg.src = '';
@@ -90,33 +89,29 @@ function onBackdropClick() {
   console.log('Клик в бекдроп');
 }
 
+// пролистивание
+function onArrowButtonClick(event) {
+  const RIGHT_BTN_CODE = 'ArrowRight';
+  const LEFT_BTN_CODE = 'ArrowLeft';
 
-function onArrowRightButtonClick(event) {
-  const ARROW_RIGHT_BTN_CODE = 'ArrowRight';
-  const isArrowRightBtn = event.code !== ARROW_RIGHT_BTN_CODE;
-  if (isArrowRightBtn) {
-    return;
+  let currentIndex = galleryItems.findIndex(
+    element => element.original === refs.bigImg.scr);
+
+  if (event.code === LEFT_BTN_CODE) {
+    if (currentIndex === 0) {
+      return;
+    }
+    currentIndex -= 1;
   }
-  const arrOfImg = galleryItems.map(({ original }) => original);
-  let currentImgIndex = arrOfImg.indexOf(refs.bigImg.src);
 
-  if (currentImgIndex + 1 > arrOfImg.length - 1) {
-    currentImgIndex = -1;
+  if (event.code === RIGHT_BTN_CODE) {
+    if (currentIndex === galleryItems.length - 1) {
+      return;
+    }
+    currentIndex += 1;
   }
 
-  refs.bigImg.src = arrOfImg[currentImgIndex + 1];
+  refs.bigImg.src = galleryItems[currentIndex].original;
+  refs.bigImg.alt = galleryItems[currentIndex].description;
 }
 
-function onArrowLeftButtonClick(event) {
-  const ARROW_LEFT_BTN_CODE = 'ArrowLeft';
-  const isArrowLeftBtn = event.code !== ARROW_LEFT_BTN_CODE;
-  if (isArrowLeftBtn) {
-    return;
-  }
-  const arrOfImg = galleryItems.map(({ original }) => original);
-  let currentImgIndex = arrOfImg.indexOf(refs.bigImg.src);
-  if (currentImgIndex === 0) {
-    currentImgIndex = arrOfImg.length;
-  }
-  refs.bigImg.src = arrOfImg[currentImgIndex - 1];
-}
