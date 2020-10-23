@@ -44,9 +44,9 @@ function openModal(event) {
     return;
   }
   refs.modal.classList.add('is-open');
-
-  window.addEventListener('keydown', onEscBtnClick);
   window.addEventListener('keydown', onArrowButtonClick);
+  window.addEventListener('keydown', onEscBtnClick);
+  // window.addEventListener('keydown', onArrowRightButtonClick);
 
   refs.bigImg.src = event.target.dataset.source;
   refs.bigImg.alt = event.target.alt;
@@ -55,8 +55,8 @@ function openModal(event) {
 function OnCloseModalBtnClick() {
 
   refs.modal.classList.remove('is-open');
-
   window.removeEventListener('keydown', onArrowButtonClick);
+  // window.removeEventListener('keydown', onArrowRightButtonClick);
   window.addEventListener('keydown', onEscBtnClick);
 
   refs.bigImg.src = '';
@@ -72,6 +72,7 @@ function onEscBtnClick(event) {
 
     window.addEventListener('keydown', onEscBtnClick);
     window.removeEventListener('keydown', onArrowButtonClick);
+    // window.removeEventListener('keydown', onArrowRightButtonClick);
     window.removeEventListener('keydown', onEscBtnClick);
 
     refs.bigImg.src = '';
@@ -80,8 +81,8 @@ function onEscBtnClick(event) {
 }
 function onBackdropClick() {
   refs.modal.classList.remove('is-open');
-
   window.removeEventListener('keydown', onArrowButtonClick);
+  // window.removeEventListener('keydown', onArrowRightButtonClick);
   window.addEventListener('keydown', onEscBtnClick);
 
   refs.bigImg.src = '';
@@ -89,29 +90,57 @@ function onBackdropClick() {
   console.log('Клик в бекдроп');
 }
 
-// пролистивание
+// пролистивание вариант1
 function onArrowButtonClick(event) {
   const RIGHT_BTN_CODE = 'ArrowRight';
   const LEFT_BTN_CODE = 'ArrowLeft';
-
-  let currentIndex = galleryItems.findIndex(
-    element => element.original === refs.bigImg.scr);
-
+  let findIndexImg = galleryItems.findIndex(
+    el => el.original === refs.bigImg.src
+  );
   if (event.code === LEFT_BTN_CODE) {
-    if (currentIndex === 0) {
+    if (findIndexImg === 0) {
       return;
     }
-    currentIndex -= 1;
+    findIndexImg -= 1;
   }
 
   if (event.code === RIGHT_BTN_CODE) {
-    if (currentIndex === galleryItems.length - 1) {
+    if (findIndexImg === galleryItems.length - 1) {
       return;
     }
-    currentIndex += 1;
+    findIndexImg += 1;
   }
-
-  refs.bigImg.src = galleryItems[currentIndex].original;
-  refs.bigImg.alt = galleryItems[currentIndex].description;
+  refs.bigImg.src = galleryItems[findIndexImg].original;
+  refs.bigImg.alt = galleryItems[findIndexImg].description;
 }
 
+// вариант 2
+// function onArrowRightButtonClick(evt) {
+//   const ARROW_RIGHT_BTN_CODE = 'ArrowRight';
+//   const isArrowRightBtn = evt.code !== ARROW_RIGHT_BTN_CODE;
+//   if (isArrowRightBtn) {
+//     return;
+//   }
+//   const arrOfImg = galleryItems.map(({ original }) => original);
+//   let currentImgIndex = arrOfImg.indexOf(refs.bigImg.src);
+
+//   if (currentImgIndex + 1 > arrOfImg.length - 1) {
+//     currentImgIndex = -1;
+//   }
+
+//   refs.bigImg.src = arrOfImg[currentImgIndex + 1];
+// }
+
+// function onArrowLeftButtonClick(evt) {
+//   const ARROW_LEFT_BTN_CODE = 'ArrowLeft';
+//   const isArrowLeftBtn = evt.code !== ARROW_LEFT_BTN_CODE;
+//   if (isArrowLeftBtn) {
+//     return;
+//   }
+//   const arrOfImg = galleryItems.map(({ original }) => original);
+//   let currentImgIndex = arrOfImg.indexOf(refs.bigImg.src);
+//   if (currentImgIndex === 0) {
+//     currentImgIndex = arrOfImg.length;
+//   }
+//   refs.bigImg.src = arrOfImg[currentImgIndex - 1];
+// }
